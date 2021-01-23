@@ -34,7 +34,7 @@ Create an environment to run them.
 yes | conda create -n gymenv python=2.7 pip==19.3.1 numpy matplotlib scikit-image
 conda activate gymenv
 yes | pip install gym rospkg catkin_pkg defusedxml netifaces
-git clone https://github.com/zhaolongkzz/gym_gazebo_kinetic.git
+git clone https://github.com/abstractguy/gym_gazebo_kinetic.git
 cd gym_gazebo_kinetic
 pip install -e .
 ```
@@ -42,48 +42,44 @@ pip install -e .
 ## Installation of ROS
 First installing some ROS dependencies below:
 ```bash
-sudo apt-get install \
-cmake gcc g++ qt4-qmake libqt4-dev \
-libusb-dev libftdi-dev \
-ros-kinetic-octomap-msgs        \
-ros-kinetic-joy                 \
-ros-kinetic-geodesy             \
-ros-kinetic-octomap-ros         \
-ros-kinetic-control-toolbox     \
-ros-kinetic-pluginlib	       \
-ros-kinetic-trajectory-msgs     \
-ros-kinetic-control-msgs	       \
-ros-kinetic-std-srvs 	       \
-ros-kinetic-nodelet	       \
-ros-kinetic-urdf		       \
-ros-kinetic-rviz		       \
-ros-kinetic-kdl-conversions     \
-ros-kinetic-eigen-conversions   \
-ros-kinetic-tf2-sensor-msgs     \
-ros-kinetic-pcl-ros \
-ros-kinetic-navigation
+sudo apt update
+sudo apt-get -y install cmake \
+                        gcc \
+                        g++ \
+                        qt4-qmake \
+                        libqt4-dev \
+                        libusb-dev \
+                        libftdi-dev \
+                        ros-kinetic-octomap-msgs \
+                        ros-kinetic-joy \
+                        ros-kinetic-geodesy \
+                        ros-kinetic-octomap-ros \
+                        ros-kinetic-control-toolbox \
+                        ros-kinetic-pluginlib \
+                        ros-kinetic-trajectory-msgs \
+                        ros-kinetic-control-msgs \
+                        ros-kinetic-std-srvs \
+                        ros-kinetic-nodelet \
+                        ros-kinetic-urdf \
+                        ros-kinetic-rviz \
+                        ros-kinetic-kdl-conversions \
+                        ros-kinetic-eigen-conversions \
+                        ros-kinetic-tf2-sensor-msgs \
+                        ros-kinetic-pcl-ros \
+                        ros-kinetic-navigation \
+                        ros-kinetic-sophus \
+                        ros-kinetic-ar-track-alvar-msgs \
+                        ros-kinetic-rqt-joint-trajectory-controller \
+                        libusb-dev \
+                        libftdi-dev
 ```
 
-Other dependencies and libraries:
-```bash
-# Failed to find libusb
-sudo apt-get install libusb-dev
-# ftdi.h: No such file or directory
-sudo apt-get install libftdi-dev
-
-sudo apt-get install ros-kinetic-sophus
-
-sudo apt-get install ros-kinetic-ar-track-alvar-msgs
-
-sudo apt-get install ros-kinetic-rqt-joint-trajectory-controller
-```
-
-Update your gazebo:
+## Installation of Gazebo:
 ```bash
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
 wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 sudo apt-get update
-sudo apt-get install gazebo7
+sudo apt-get install gazebo9
 ```
 
 
@@ -92,7 +88,7 @@ sudo apt-get install gazebo7
 ### 1.Compile all the packages
 **Note**: All the command in ROS, I recommand executing in terminal without anaconda, this may lead some interference with your dependencies.
 
-I have alter some github package or version in files, use `gazebo_ros_kinetic.repos` in my github [here](https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/gym_gazebo/envs/installation/gazebo_ros_kinetic.repos), please.
+I have alter some github package or version in files, use `gazebo_ros_kinetic.repos` in my github [here](https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/gym_gazebo/envs/installation/gazebo_ros_kinetic.repos), please.
 ```bash
 cd gym_gazebo_kinetic/envs/installation
 bash setup_kinetic.bash
@@ -142,16 +138,16 @@ python display_plot.py
 
 ## Picture
 <p align="center">
-  <img src="https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/imgs/qlearn.png"><br><br>
+  <img src="https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/imgs/qlearn.png"><br><br>
 </p>
 
 <p align="center">
-  <img src="https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/imgs/dqn.png"><br><br>
+  <img src="https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/imgs/dqn.png"><br><br>
 </p>
 
 
 ## LICENCE
-[MIT License](https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/LICENSE)
+[MIT License](https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/LICENSE)
 
 
 ## FAQ
