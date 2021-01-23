@@ -1,6 +1,3 @@
-
-EN | [中文](https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/README_CN.md)
-
 # Overview of gym-gazebo
 An OpenAI gym extension for using Gazebo known as `gym-gazebo`! This work can put gym environment with gazbeo, then you would like putting robot into gazebo with code applying gym. You can also visit the official github here [gym-gazebo](https://github.com/erlerobot/gym-gazebo). If you use ROS2, the better way to you is visiting the newest version [gym-gazebo2](https://github.com/AcutronicRobotics/gym-gazebo2).
 
@@ -34,34 +31,12 @@ If you want to train it with GPU here, you should install cuda
 
 Create an environment to run them.
 ```bash
-conda create -n gymenv python=2.7
-source activate gymenv
-```
-
-Install gym and gym-gazebo
-```bash
-# install gym
-git clone https://github.com/openai/gym.git
-cd gym
+yes | conda create -n gymenv python=2.7 pip==19.3.1 numpy matplotlib scikit-image
+conda activate gymenv
+yes | pip install gym rospkg catkin_pkg defusedxml netifaces
+git clone https://github.com/zhaolongkzz/gym_gazebo_kinetic.git
+cd gym_gazebo_kinetic
 pip install -e .
-
-# install gym-gazebo
-git clone https://github.com/zhaolongkzz/gym_gazebo_kinetic
-cd ~/gym_gazebo_kinetic
-pip install -e .
-```
-
-Here some package you need to install first in your conda environment, if not, it will appear some errors when you run the code.
-```bash
-conda install numpy matplotlib
-
-pip install rospkg catkin_pkg
-
-pip install defusedxml
-
-conda install scikit-image
-
-pip install netifaces
 ```
 
 ## Installation of ROS
