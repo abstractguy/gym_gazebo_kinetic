@@ -2,12 +2,12 @@
 An OpenAI gym extension for using Gazebo known as `gym-gazebo`! This work can put gym environment with gazebo, then you would like putting robot into gazebo with code applying gym. You can also visit the official github here [gym-gazebo](https://github.com/erlerobot/gym-gazebo). If you use ROS2, the better way for you is visiting the newest version [gym-gazebo2](https://github.com/AcutronicRobotics/gym-gazebo2).
 
 ## Summary
-Because the official github which install version to Ubuntu16.04 has been deprecated, and the package in author's github has many question that has been closed without issues, Here I provide installation of mine and some hint to problem solving.
+Because the official github which install version to Ubuntu 16.04 has been deprecated, and the package in author's github has many question that has been closed without issues, Here I am porting this to Ubuntu 18.04. Meanwhile, most of this has been tested on Ubuntu 16.04.
 
-The original Installation of authors is here [original](https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/Introduction.md) and here [INSTALL](https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/INSTALL.md). If this installation wouldn't help you, visiting the author's github and submit a issue.
+The original author's installation is here [original](https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/Introduction.md) and here [INSTALL](https://github.com/zhaolongkzz/gym_gazebo_kinetic/blob/kinetic/INSTALL.md). If you encounter bugs here while I am developing, visit the author's github and/or submit a issue.
 
 ## Prerequisites
-- ubuntu16.04
+- ubuntu16.04 (currently working on porting to ubuntu18.04)
 - ROS-Kinetic
   &ensp;&ensp;(visit the official web [here](http://wiki.ros.org/kinetic/Installation/Ubuntu).)
 - Gazebo 7.14
@@ -27,14 +27,25 @@ If you want to train it with GPU here, you should install cuda
 
 Create an environment to run them.
 ```bash
-yes | conda create -n gymenv python=2.7 pip=19.3.1 numpy=1.16.2 matplotlib=2.2.3 protobuf=3.5.2
+yes | conda create -n gymenv python=2.7 pip=19.3.1 numpy=1.16.2 matplotlib=2.2.3 protobuf=3.5.2 scikit-image=0.14.2 cudatoolkit=9.0
 conda activate gymenv
 yes | pip install gym rospkg catkin_pkg defusedxml netifaces
-yes | pip install --upgrade scikit-image==0.14.2
 git clone https://github.com/abstractguy/gym_gazebo_kinetic.git
 cd gym_gazebo_kinetic
 pip install -e .
 ```
+
+## Installation of virtualenv
+
+When using electronics, you may want to use this method instead.
+```bash
+sudo apt install virtualenv
+virtualenv venv --no-pip
+source venv/bin/activate
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py pip==19.3.1
+```
+
 
 ## Installation of ROS
 First installing some ROS dependencies below:
@@ -47,31 +58,29 @@ sudo apt-get -y install cmake \
                         libqt4-dev \
                         libusb-dev \
                         libftdi-dev \
-                        ros-kinetic-octomap-msgs \
-                        ros-kinetic-joy \
-                        ros-kinetic-geodesy \
-                        ros-kinetic-octomap-ros \
-                        ros-kinetic-control-toolbox \
-                        ros-kinetic-pluginlib \
-                        ros-kinetic-trajectory-msgs \
-                        ros-kinetic-control-msgs \
-                        ros-kinetic-std-srvs \
-                        ros-kinetic-nodelet \
-                        ros-kinetic-urdf \
-                        ros-kinetic-rviz \
-                        ros-kinetic-kdl-conversions \
-                        ros-kinetic-eigen-conversions \
-                        ros-kinetic-tf2-sensor-msgs \
-                        ros-kinetic-pcl-ros \
-                        ros-kinetic-navigation \
-                        ros-kinetic-sophus \
-                        ros-kinetic-ar-track-alvar-msgs \
-                        ros-kinetic-rqt-joint-trajectory-controller \
-                        libusb-dev \
-                        libftdi-dev \
                         libspnav-dev \
                         libcwiid-dev \
                         libignition-math2-dev
+                        ros-kinetic-ar-track-alvar-msgs \
+                        ros-kinetic-control-toolbox \
+                        ros-kinetic-control-msgs \
+                        ros-kinetic-eigen-conversions \
+                        ros-kinetic-geodesy \
+                        ros-kinetic-joy \
+                        ros-kinetic-kdl-conversions \
+                        ros-kinetic-navigation \
+                        ros-kinetic-nodelet \
+                        ros-kinetic-octomap-msgs \
+                        ros-kinetic-octomap-ros \
+                        ros-kinetic-pcl-ros \
+                        ros-kinetic-pluginlib \
+                        ros-kinetic-rqt-joint-trajectory-controller \
+                        ros-kinetic-rviz \
+                        ros-kinetic-sophus \
+                        ros-kinetic-std-srvs \
+                        ros-kinetic-tf2-sensor-msgs \
+                        ros-kinetic-trajectory-msgs \
+                        ros-kinetic-urdf
 ```
 
 ## Installation of Gazebo:
@@ -86,32 +95,32 @@ sudo apt-get install gazebo7
 ## Quickstart
 
 ### 1.Compile all the packages
-**Note**: All the command in ROS, I recommand executing in terminal without anaconda, this may lead some interference with your dependencies.
+**Note**: Anaconda could interfere with ROS dependencies.
 
-I have alter some github package or version in files, use `gazebo_ros_kinetic.repos` in my github [here](https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/gym_gazebo/envs/installation/gazebo_ros_kinetic.repos), please.
+I have altered some github package or version in files, use `gazebo_ros_kinetic.repos` in my github [here](https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/gym_gazebo/envs/installation/gazebo_ros_kinetic.repos).
 ```bash
 cd gym_gazebo_kinetic/envs/installation
 bash setup_kinetic.bash
 ```
 
-Put model file into your workspace/src folder.
+Put the model file into your workspace/src folder.
 ```bash
 cd gym_gazebo_kinetic/envs/installation
 bash turtlebot_setup.bash
 ```
 
-After first two steps above, you will find five lines being added in your `~/.bashrc`:
+After the first two steps above, you will find five lines being added in your `~/.bashrc`:
 ```bash
-source /home/samuel/school/Project/gym-gazebo/gym_gazebo/envs/installation/gym_ws/devel/setup.bash
-export GAZEBO_MODEL_PATH=/home/samuel/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/models
-export GYM_GAZEBO_WORLD_MAZE=/home/samuel/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/maze.world
-export GYM_GAZEBO_WORLD_CIRCUIT=/home/samuel/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/circuit.world
-export GYM_GAZEBO_WORLD_CIRCUIT2=/home/samuel/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/circuit2.world
-export GYM_GAZEBO_WORLD_CIRCUIT2C=/home/samuel/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/circuit2c.world
-export GYM_GAZEBO_WORLD_ROUND=/home/samuel/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/round.world
+source "${HOME}/school/Project/gym-gazebo/gym_gazebo/envs/installation/gym_ws/devel/setup.bash"
+export GAZEBO_MODEL_PATH="${HOME}/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/models"
+export GYM_GAZEBO_WORLD_MAZE="${HOME}/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/maze.world"
+export GYM_GAZEBO_WORLD_CIRCUIT="${HOME}/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/circuit.world"
+export GYM_GAZEBO_WORLD_CIRCUIT2="${HOME}/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/circuit2.world"
+export GYM_GAZEBO_WORLD_CIRCUIT2C="${HOME}/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/circuit2c.world"
+export GYM_GAZEBO_WORLD_ROUND="${HOME}/school/Project/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/round.world"
 ```
 
-Here open a new terminal, and uncomment your conda env in your `.bashrc`. Then using it with below:
+Open a new terminal and uncomment your conda env in your `.bashrc`. Then use it as below:
 ```bash
 source activate gymenv
 
@@ -121,11 +130,11 @@ python circuit2_turtlebot_lidar_qlearn.py
 
 
 ### 2.Open gazebo
-Open another Terminal:
+Open another terminal:
 ```bash
 cd gym-gazebo/gym_gazebo/envs/installation/
 source turtlebot_setup.bash
-# here the number is set in your code, default 12346
+# Here the number is set in your code. Default is 12346.
 export GAZEBO_MASTER_URI=http://localhost:12346
 gzclient
 ```
@@ -152,7 +161,7 @@ python display_plot.py
 
 ## FAQ
 
-**Q1**: If encountering that `ImportError: No module named msg` like below:
+**Q1**: I encounter `ImportError: No module named msg` like below:
 
 ```bash
 Traceback (most recent call last):
@@ -160,3 +169,6 @@ Traceback (most recent call last):
     from driver_base.msg import SensorLevels
 ImportError: No module named msg
 ```
+***
+
+A1: Run driver_base first, like that catkin_make -DCATKIN_WHITELIST_PACKAGES="driver_base".
