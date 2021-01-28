@@ -99,13 +99,13 @@ sudo apt-get install gazebo7
 
 I have altered some github package or version in files, use `gazebo_ros_kinetic.repos` in my github [here](https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/gym_gazebo/envs/installation/gazebo_ros_kinetic.repos).
 ```bash
-cd gym_gazebo_kinetic/envs/installation
+cd gym_gazebo/envs/installation
 bash setup_kinetic.bash
 ```
 
 Put the model file into your workspace/src folder.
 ```bash
-cd gym_gazebo_kinetic/envs/installation
+cd gym_gazebo/envs/installation
 bash turtlebot_setup.bash
 ```
 
