@@ -29,7 +29,15 @@ Create an environment to run them.
 ```bash
 yes | conda create -n gymenv python=2.7 pip=19.3.1 numpy=1.16.2 matplotlib=2.2.3 protobuf=3.5.2 scikit-image=0.14.2 cudatoolkit=9.0
 conda activate gymenv
-yes | pip install gym rospkg catkin_pkg defusedxml netifaces
+yes | pip install rospkg catkin_pkg defusedxml netifaces tensorflow-gpu
+yes | sudo pip install gym h5py keras
+curl -sSL http://get.gazebosim.org | sh
+git clone https://github.com/erlerobot/gym-gazebo
+cd gym-gazebo
+sudo pip install -e .
+cd gym_gazebo/envs/installation
+bash setup_melodic.bash
+cd ../../../..
 git clone https://github.com/abstractguy/gym_gazebo_kinetic.git
 cd gym_gazebo_kinetic
 pip install -e .
@@ -47,10 +55,10 @@ python get-pip.py pip==19.3.1
 ```
 
 
-## Installation of ROS
+## Installation of ROS Kinetic (skip if using ROS Melodic)
 First installing some ROS dependencies below:
 ```bash
-sudo apt update
+sudo apt update && \
 sudo apt-get -y install cmake \
                         gcc \
                         g++ \
@@ -60,7 +68,7 @@ sudo apt-get -y install cmake \
                         libftdi-dev \
                         libspnav-dev \
                         libcwiid-dev \
-                        libignition-math2-dev
+                        libignition-math2-dev \
                         ros-kinetic-ar-track-alvar-msgs \
                         ros-kinetic-control-toolbox \
                         ros-kinetic-control-msgs \
@@ -83,12 +91,48 @@ sudo apt-get -y install cmake \
                         ros-kinetic-urdf
 ```
 
-## Installation of Gazebo:
+
+## Installation of ROS Melodic
+First installing some ROS dependencies below:
 ```bash
-sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install gazebo7
+sudo apt update && \
+sudo apt-get -y install cmake \
+                        curl \
+                        g++ \
+                        gcc \
+                        libbluetooth-dev \
+                        libcwiid-dev \
+                        libqt4-dev \
+                        libftdi-dev \
+                        libignition-math2-dev \
+                        libspnav-dev \
+                        libusb-dev \
+                        python-pip \
+                        python-skimage \
+                        python3-defusedxml \
+                        python3-pyqt4 \
+                        python3-vcstool \
+                        pyqt4-dev-tools \
+                        pyqt5-dev-tools \
+                        qt4-qmake \
+                        ros-melodic-control-msgs \
+                        ros-melodic-control-toolbox \
+                        ros-melodic-eigen-conversions \
+                        ros-melodic-geodesy \
+                        ros-melodic-joy \
+                        ros-melodic-kdl-conversions \
+                        ros-melodic-navigation \
+                        ros-melodic-nodelet \
+                        ros-melodic-octomap-msgs \
+                        ros-melodic-octomap-ros \
+                        ros-melodic-pcl-ros \
+                        ros-melodic-pluginlib \
+                        ros-melodic-rviz \
+                        ros-melodic-sophus \
+                        ros-melodic-std-srvs \
+                        ros-melodic-tf2-sensor-msgs \
+                        ros-melodic-trajectory-msgs \
+                        ros-melodic-urdf
 ```
 
 
