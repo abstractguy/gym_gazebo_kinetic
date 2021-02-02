@@ -1,8 +1,16 @@
+#sudo docker system prune -a --volumes
+#sudo bash build.sh kinetic-perception
+
 #ARG NAME=ros_ws
 ARG NAME=catkin_ws
 
+ARG UID=1000
+ARG GID=1000
+
 FROM ros:kinetic-robot-xenial
+
 ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && \
     apt-get install -y bash-completion \
                        build-essential \
@@ -12,10 +20,10 @@ RUN apt-get update && \
                        wget && \
     rm -rf /var/lib/apt/lists/*
 
-ARG UID=1000
-ARG GID=1000
-RUN addgroup --gid ${GID} ros
-RUN adduser --gecos "ROS User" --disabled-password --uid ${UID} --gid ${GID} ros
+#RUN addgroup --gid ${GID} ros
+#RUN adduser --gecos "ROS User" --disabled-password --uid ${UID} --gid ${GID} ros
+RUN addgroup --gid 1000 ros
+RUN adduser --gecos "ROS User" --disabled-password --uid 1000 --gid 1000 ros
 RUN usermod -a -G dialout ros
 ADD config/99_aptget /etc/sudoers.d/99_aptget
 RUN chmod 0440 /etc/sudoers.d/99_aptget && \
@@ -27,15 +35,15 @@ ENV USER ros
 USER ros
 ENV HOME /home/${USER}
 
-# Update packages and install dependencies.
-RUN sudo /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN /bin/bash -c "sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
-                  curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | sudo apt-key add - && \
-                  sudo apt-get update && \
-                  sudo apt-get install ros-kinetic-desktop-full"
+## Update packages and install dependencies.
+#RUN sudo /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+#RUN /bin/bash -c "sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
+#                  curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | sudo apt-key add - && \
+#                  sudo apt-get update && \
+#                  sudo apt-get install ros-kinetic-desktop-full"
 
-RUN /bin/bash -c 'echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc && \
-                  source /opt/ros/kinetic/setup.bash'
+#RUN /bin/bash -c 'echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc && \
+#                  source /opt/ros/kinetic/setup.bash'
 
 RUN sudo /bin/sh -c "apt-get update && \
                      apt-get install -y build-essential \
@@ -58,6 +66,7 @@ RUN sudo /bin/sh -c "apt-get update && \
                                         python-rosinstall-generator \
                                         python-wstool \
                                         python3-defusedxml \
+                                        python3-pip \
                                         python3-pyqt4 \
                                         python3-skimage \
                                         python3-vcstool \
@@ -82,27 +91,46 @@ RUN sudo /bin/sh -c "apt-get update && \
                                         ros-kinetic-tf2-sensor-msgs \
                                         ros-kinetic-trajectory-msgs \
                                         ros-kinetic-urdf && \
-                     rm -rf /var/lib/apt/lists/*" && \
-                     yes | pip3 install gym \
-                                        h5py \
-                                        keras \
-                                        pyuarm \
-                                        pyyaml \
-                                        pyserial \
-                                        rospkg \
-                                        catkin_pkg \
-                                        defusedxml \
-                                        netifaces \
-                                        tensorflow-gpu \
-                                        pip=19.3.1 \
-                                        numpy=1.16.2 \
-                                        matplotlib=2.2.3 \
-                                        protobuf=3.5.2 \
-                                        scikit-image=0.14.2 \
-                               --user && \
-                     rosdep init"
+                     rm -rf /var/lib/apt/lists/*"
 
-RUN rosdep update
+#RUN sudo -H /bin/bash -c "yes | pip install --upgrade pip==19.3.1 && \
+#                          yes | pip install gym \
+#                                            h5py \
+#                                            keras \
+#                                            pyuarm \
+#                                            pyyaml \
+#                                            pyserial \
+#                                            rospkg \
+#                                            catkin_pkg \
+#                                            defusedxml \
+#                                            netifaces \
+#                                            numpy==1.16.2 \
+#                                            matplotlib==2.2.3 \
+#                                            protobuf==3.5.2 \
+#                                            scikit-image==0.14.2 \
+#                                            tensorflow-gpu \
+#                                    --user"
+
+RUN sudo -H /bin/bash -c "yes | pip install --upgrade pip==19.3.1 && \
+                          yes | pip install gym \
+                                            h5py \
+                                            keras \
+                                            pyuarm \
+                                            pyyaml \
+                                            pyserial \
+                                            rospkg \
+                                            catkin_pkg \
+                                            defusedxml \
+                                            netifaces \
+                                            numpy==1.16.2 \
+                                            matplotlib==2.2.3 \
+                                            protobuf==3.5.2 \
+                                            scikit-image==0.14.2 \
+                                    --user"
+
+RUN sudo /bin/bash -c "rosdep init && \
+                       rm -rf /etc/ros/rosdep/sources.list.d/20-default.list && \
+                       rosdep update"
 
 # Install Gazebo 7 .
 #RUN curl -sSL http://get.gazebosim.org | sh

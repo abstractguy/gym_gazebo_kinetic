@@ -24,8 +24,10 @@ docker pull ${BASE_IMAGE}:${BASE_TAG}
 #NAME=ros_ws
 NAME=catkin_ws
 
-UID="$(id -u $USER)"
-GID="$(id -g $USER)"
+#UID="$(id -u $USER)"
+#GID="$(id -g $USER)"
+
+export UID=1000 GID=1000
 
 if [ "$REBUILD" -eq 1 ]
 then
