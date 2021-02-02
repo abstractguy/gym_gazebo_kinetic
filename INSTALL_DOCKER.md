@@ -2,7 +2,7 @@
 This repository is currently worked towards bootstrapping UArmForROS. This install is currently being tested on Ubuntu 16.04 LTS (on a x86_64 computer) while I'm making the uARM work. Then, I will be porting to Docker for portability on other Ubuntu versions. This will allow me to target a Jetson Nano while removing dependencies. This project is in an early development stage.
 
 ## Prerequisites
-- Ubuntu 16.04 LTS (or 18.04 LTS or 20.04 LTS, presumably)
+- Ubuntu 16.04 LTS, 18.04 LTS or 20.04 LTS
 
 ## Install Nvidia GPU dependencies.
 
@@ -11,7 +11,7 @@ This repository is currently worked towards bootstrapping UArmForROS. This insta
     $ sudo shutdown -r now
 
 ### 2. Install Cuda toolkit for Nvidia GPU.
-    $ sudo apt install -y nvidia-cuda-toolkit
+    $ sudo apt-get install -y nvidia-cuda-toolkit
 
 ## Purge previous Docker installations.
 
@@ -62,20 +62,16 @@ This repository is currently worked towards bootstrapping UArmForROS. This insta
     $ sudo apt-get update
 
 ### 6. Install Docker Engine.
-    $ sudo apt-get install docker-ce docker-ce-cli containerd.io
+    $ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 ## Docker Engine post-install.
 
-### 1. Make Docker load at boot-time.
-    $ sudo systemctl --now enable docker
-    $ sudo systemctl --now enable containerd
-
-### 2. Make Docker available to current non-root user without sudo (ignore warnings and errors).
-    $ sudo groupadd docker
+### 1. Make Docker available to current non-root user without sudo and force group permissions reload.
     $ sudo usermod -aG docker $USER
     $ newgrp docker
-    $ sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
-    $ sudo chmod g+rwx "$HOME/.docker" -R
+
+### 2. Make Docker load at boot-time.
+    $ sudo systemctl --now enable docker
 
 ### 3. Test new Docker installation.
     $ docker run hello-world
@@ -102,16 +98,18 @@ This repository is currently worked towards bootstrapping UArmForROS. This insta
 ### 5. Test install.
     $ docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
 
-## Picture
-<p align="center">
-  <img src="https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/imgs/qlearn.png"><br><br>
-</p>
-
-<p align="center">
-  <img src="https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/imgs/dqn.png"><br><br>
-</p>
-
-
 ## LICENCE
 [MIT License](https://github.com/abstractguy/gym_gazebo_kinetic/blob/kinetic/LICENSE)
 
+## FAQ
+
+**Q1**: I encounter `SomeError: blabla` and it still doesn't work, like below:
+
+```bash
+docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/create: dial unix /var/run/docker.sock: connect: permission denied.
+```
+***
+
+A1: Make Docker available to current non-root user without sudo.
+    $ sudo usermod -aG docker $USER
+    $ newgrp docker
