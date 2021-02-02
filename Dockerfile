@@ -128,10 +128,6 @@ RUN sudo -H /bin/bash -c "yes | pip install --upgrade pip==19.3.1 && \
                                             scikit-image==0.14.2 \
                                     --user"
 
-RUN sudo /bin/bash -c "rosdep init && \
-                       rm -rf /etc/ros/rosdep/sources.list.d/20-default.list && \
-                       rosdep update"
-
 # Install Gazebo 7 .
 #RUN curl -sSL http://get.gazebosim.org | sh
 RUN sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list'
@@ -147,26 +143,27 @@ RUN sudo sh -c "apt-get update && \
                                    #moveit_simple_controller_manager \
                 rm -rf /var/lib/apt/lists/*"
 
+ENV NAME='catkin_ws'
 RUN mkdir -p ${HOME}/${NAME}/src
 WORKDIR ${HOME}/${NAME}/src
 
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash; catkin_init_workspace"
+WORKDIR ${HOME}/${NAME}
+RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash; catkin_make"
 
 RUN /bin/bash -c "git clone https://github.com/erlerobot/gym-gazebo && \
                   cd gym-gazebo && \
-                  pip install -e . && \
+                  pip install -e . --user && \
                   cd gym_gazebo/envs/installation && \
-                  bash setup_kinetic.bash && \
-                  cd ../../../.."
+                  bash setup_kinetic.bash"
 
-RUN /bin/bash -c "cd ~/catkin_ws/src && \
-                  git clone https://github.com/abstractguy/UArmForROS.git && \
-                  cd UArmForROS && \
-                  pip install -e . && \
-                  cd .."
+RUN /bin/bash -c "cd ${HOME}/${NAME}/src && \
+                  git clone https://github.com/abstractguy/UArmForROS.git"
 
-WORKDIR ${HOME}/${NAME}
-RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash; catkin_make
+RUN /bin/bash -c "cd ${HOME}/${NAME}; source /opt/ros/${ROS_DISTRO}/setup.bash; catkin_make"
+
+#RUN sudo -H /bin/bash -c "rosdep init && \
+#                          rosdep update"
 
 # Set missing environment variable needed to run Qt applications.
 ENV QT_X11_NO_MITSHM 1
